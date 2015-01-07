@@ -13,6 +13,8 @@ type Controller struct {
 
 type CtrHandler interface {
 	Handler(*Controller) bool
+        AddHandler(path string, h CtrHandler)
+        DelHandler(path string)
 }
 
 var globalSessions *session.Manager
@@ -55,6 +57,10 @@ func (this *Controller) FormValue(key string) string {
 
 func (this *Controller) WriteString(s string) {
 	this.Ctx.WriteString(s)
+}
+
+func (this *Controller)Write(s []byte) {
+        this.Ctx.ResponseWriter.Write(s)
 }
 
 func (this *Controller) SessionStart() (session session.SessionStore, err error) {
