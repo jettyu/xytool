@@ -37,7 +37,7 @@ func Run(params ...string) {
     for k,v := range sess {
         s,e := session.NewManager(k, v)
         if e != nil {
-            beego.Error(err.Error())
+            beego.Error(e.Error())
         }
 	globalSessions = s
 	go globalSessions.GC()
