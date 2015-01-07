@@ -33,10 +33,8 @@ func Router(rootpath string, h CtrHandler, c beego.ControllerInterface, mappingM
     return beego.Router(rootpath, c, mappingMethods...)
 }
 
-func Run(params ...string) {
+func Run(ini *simini.SimIni, params ...string) {
     fmt.Println("controler::Run")
-    ini := &simini.SimIni{}
-    ini.LoadFile("conf/conf.ini")
     sess := ini.GetSession("session")
     for k,v := range sess {
         fmt.Println("sess|k="+k+"|v="+v)
