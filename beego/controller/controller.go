@@ -4,7 +4,6 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/session"
 	//"github.com/astaxie/beego/context"
-	"strings"
 )
 
 type Controller struct {
