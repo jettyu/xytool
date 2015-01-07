@@ -59,7 +59,7 @@ func (this *Controller) WriteString(s string) {
 	this.Ctx.WriteString(s)
 }
 
-func (this *Controller)Write(s []byte) {
+func (this *Controller) Write(s []byte) {
         this.Ctx.ResponseWriter.Write(s)
 }
 
