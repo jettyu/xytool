@@ -42,7 +42,6 @@ func (this *ThriftSt) Start() error {
 	if err != nil {
 		return err
 	}
-	defer this.Close()
 	return nil
 }
 
