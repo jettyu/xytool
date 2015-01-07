@@ -24,10 +24,9 @@ func SetStaticPath(k, v string) {
 }
 
 func Router(rootpath string, h CtrHandler, c beego.ControllerInterface, mappingMethods ...string) *beego.App {
-    if len(rootpath) == 0 || rootpath[len(rootpath)-1] != '/' {
-        rootpath += "/"
+    if len(rootpath) != 0 {
+        globalClientMap[rootpath] = h
     }
-    globalClientMap[rootpath] = h
     return beego.Router(rootpath, c, mappingMethods...)
 }
 
