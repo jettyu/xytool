@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/session"
+        "github.com/xiying/xytool/simini"
 	//"github.com/astaxie/beego/context"
 )
 
@@ -31,6 +32,16 @@ func Router(rootpath string, h CtrHandler, c beego.ControllerInterface, mappingM
 }
 
 func Run(params ...string) {
+    ini := &simini.SimIni{}
+    sess := ini.GetSession("session")
+    for k,v := range sess {
+        s,e := session.NewManager(k, v)
+        if e != nil {
+            beego.Error(err.Error())
+        }
+	globalSessions = s
+	go globalSessions.GC()
+    }
     beego.Run(params...)
 }
 
@@ -41,11 +52,6 @@ func Run(params ...string) {
 //func DelCtrHandler(s string) {
 //	delete(globalClientMap, s)
 //}
-
-func Init(sess *session.Manager) {
-	globalSessions = sess
-	go globalSessions.GC()
-}
 
 func (this *Controller) Get() {
 	h, ok := globalClientMap[this.Path()]
