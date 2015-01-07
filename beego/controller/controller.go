@@ -35,6 +35,7 @@ func Run(params ...string) {
     ini := &simini.SimIni{}
     sess := ini.GetSession("session")
     for k,v := range sess {
+        fmt.Println("sess|k="+k+"|v="+v)
         s,e := session.NewManager(k, v)
         if e != nil {
             beego.Error(e.Error())
