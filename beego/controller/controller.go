@@ -14,7 +14,7 @@ type Controller struct {
 
 type CtrHandler interface {
 	Handler(*Controller) bool
-        AddHandler(path string, h func(*Controller))
+        AddHandler(path string, h func(*Controller)int)
         DelHandler(path string)
 }
 
