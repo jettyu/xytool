@@ -21,6 +21,9 @@ var globalSessions *session.Manager
 var globalClientMap map[string]CtrHandler
 
 func Router(rootpath string, h CtrHandler, c beego.ControllerInterface, mappingMethods ...string) *beego.App {
+    if len(rootpath) == 0 || rootpath[len(rootpath)-1] != '/' {
+        rootpath += "/"
+    }
     globalClientMap[rootpath] = h
     return beego.Router(rootpath, c, mappingMethods...)
 }
