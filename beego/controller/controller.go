@@ -18,17 +18,22 @@ type CtrHandler interface {
 var globalSessions *session.Manager
 var globalClientMap map[string]CtrHandler
 
-func init() {
-	globalClientMap = make(map[string]CtrHandler)
+func Router(rootpath string, h CtrHandler, c beego.ControllerInterface, mappingMethods ...string) *beego.App {
+    globalClientMap[rootpath] = h
+    return beego.Router(rootpath, c, mappingMethods...)
 }
 
-func AddCtrHandler(s string, h CtrHandler) {
-	globalClientMap[s] = h
+func Run(params ...string) {
+    beego.Run(params...)
 }
 
-func DelCtrHandler(s string) {
-	delete(globalClientMap, s)
-}
+//func AddCtrHandler(s string, h CtrHandler) {
+//	globalClientMap[s] = h
+//}
+//
+//func DelCtrHandler(s string) {
+//	delete(globalClientMap, s)
+//}
 
 func Init(sess *session.Manager) {
 	globalSessions = sess
@@ -59,4 +64,8 @@ func (this *Controller) SessionStart() (session session.SessionStore, err error)
 
 func (this *Controller) SessionRelease(session session.SessionStore) {
 	session.SessionRelease(this.Ctx.ResponseWriter)
+}
+
+func init() {
+	globalClientMap = make(map[string]CtrHandler)
 }
