@@ -26,6 +26,7 @@ func SetStaticPath(k, v string) {
 }
 
 func Router(rootpath string, h CtrHandler, c beego.ControllerInterface, mappingMethods ...string) *beego.App {
+    fmt.Println("controler::Router")
     if len(rootpath) != 0 {
         globalClientMap[rootpath] = h
     }
@@ -35,6 +36,7 @@ func Router(rootpath string, h CtrHandler, c beego.ControllerInterface, mappingM
 func Run(params ...string) {
     fmt.Println("controler::Run")
     ini := &simini.SimIni{}
+    ini.LoadFile("conf/conf.ini")
     sess := ini.GetSession("session")
     for k,v := range sess {
         fmt.Println("sess|k="+k+"|v="+v)
