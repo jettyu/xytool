@@ -25,11 +25,8 @@ func SetStaticPath(k, v string) {
     beego.SetStaticPath(k,v)
 }
 
-func Router(rootpath string, h CtrHandler, c beego.ControllerInterface, mappingMethods ...string) *beego.App {
+func Router(rootpath string, c beego.ControllerInterface, mappingMethods ...string) *beego.App {
     fmt.Println("controler::Router")
-    if len(rootpath) != 0 {
-        globalClientMap[rootpath] = h
-    }
     return beego.Router(rootpath, c, mappingMethods...)
 }
 
