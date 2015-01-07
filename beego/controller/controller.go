@@ -43,12 +43,14 @@ func Init(sess *session.Manager) {
 }
 
 func (this *Controller) Get() {
-	path := this.Ctx.Request.URL.Path
-	path_1 := path[1:strings.Index(path, "/")]
-	h, ok := globalClientMap[path_1]
+	h, ok := globalClientMap[this.Path()]
 	if ok {
 		h.Handler(this)
 	}
+}
+
+func (this *Controller) Path() string {
+    return this.Ctx.Request.URL.Path
 }
 
 func (this *Controller) FormValue(key string) string {
