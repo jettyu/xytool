@@ -48,8 +48,10 @@ func Init(sess *session.Manager) {
 }
 
 func (this *Controller) Get() {
+        println("path=" + this.Path())
 	h, ok := globalClientMap[this.Path()]
 	if ok {
+               println("Controller::Get")
 		h.Handler(this)
 	}
 }
