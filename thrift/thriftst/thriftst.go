@@ -47,7 +47,11 @@ func (this *ThriftSt) Start() error {
 
 func (this *ThriftSt) Open() error {
 	//client = user.NewUserServiceClientFactory(clientTransport, protocolFactory)
-	return this.tsocket.Open()
+	err := this.tsocket.Open()
+        if err != nil {
+            fmt.Println(err.Error())
+        }
+        return err
 }
 
 func (this *ThriftSt) Close() {
