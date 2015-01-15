@@ -19,13 +19,19 @@ type CtrHandler interface {
         DelHandler(path string)
 }
 
+type CtrHandlerMap map[string]CtrHandler
+
 func NewController(h CtrHandler) *Controller{
     c := &Controller{}
+    if h == nil {
+        beego.Error("h = nil")
+    }
     c.handler = h
     return c
 }
 
 var globalSessions *session.Manager
+var globalClientMap CtrHandlerMap
 
 func InitSession(ini *simini.SimIni) error {
         storeType := ini.GetStringVal("session", "type")
@@ -48,6 +54,7 @@ func SetStaticPath(k, v string) {
 }
 
 func Router(rootpath string, c beego.ControllerInterface, mappingMethods ...string) *beego.App {
+    beego.Debug("rootpath=" + rootpath)
     return beego.Router(rootpath, c, mappingMethods...)
 }
 
@@ -56,15 +63,23 @@ func Run(params ...string) {
 }
 
 
-//func AddCtrHandler(s string, h CtrHandler) {
-//	globalClientMap[s] = h
-//}
+func AddCtrHandler(s string, h CtrHandler) {
+	globalClientMap[s] = h
+}
 //
-//func DelCtrHandler(s string) {
-//	delete(globalClientMap, s)
-//}
+func DelCtrHandler(s string) {
+	delete(globalClientMap, s)
+}
 
 func (this *Controller) Get() {
+        if this.handler == nil {
+            beego.Error("handler is nil")
+            h, ok := globalClientMap[this.Path()]
+            if ok {
+                h.Handler(this)
+                return
+            }
+        }
         this.handler.Handler(this)
 }
 
@@ -93,3 +108,6 @@ func (this *Controller) SessionRelease(session session.SessionStore) {
 	session.SessionRelease(this.Ctx.ResponseWriter)
 }
 
+func init() {
+    globalClientMap = make(CtrHandlerMap)
+}
