@@ -45,6 +45,10 @@ func Run(ini *simini.SimIni, params ...string) {
     beego.Run(params...)
 }
 
+func GlobalSession() *session.Manager {
+    return globalSessions
+}
+
 //func AddCtrHandler(s string, h CtrHandler) {
 //	globalClientMap[s] = h
 //}
