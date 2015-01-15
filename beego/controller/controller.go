@@ -10,6 +10,7 @@ import (
 
 type Controller struct {
 	beego.Controller
+        handler CtrHandler
 }
 
 type CtrHandler interface {
@@ -18,8 +19,13 @@ type CtrHandler interface {
         DelHandler(path string)
 }
 
+func NewController(h CtrHandler) *Controller{
+    c := &Controller{}
+    c.handler = h
+    return c
+}
+
 var globalSessions *session.Manager
-var globalClientMap map[string]CtrHandler
 
 func SetStaticPath(k, v string) {
     beego.SetStaticPath(k,v)
@@ -58,10 +64,7 @@ func GlobalSession() *session.Manager {
 //}
 
 func (this *Controller) Get() {
-	h, ok := globalClientMap[this.Path()]
-	if ok {
-		h.Handler(this)
-	}
+        this.handler.Handler(this)
 }
 
 func (this *Controller) Path() string {
@@ -89,6 +92,3 @@ func (this *Controller) SessionRelease(session session.SessionStore) {
 	session.SessionRelease(this.Ctx.ResponseWriter)
 }
 
-func init() {
-	globalClientMap = make(map[string]CtrHandler)
-}
