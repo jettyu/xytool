@@ -1,7 +1,7 @@
 package controller
 
 import (
-        "fmt"
+//        "fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/session"
         "github.com/xiying/xytool/simini"
@@ -27,33 +27,31 @@ func NewController(h CtrHandler) *Controller{
 
 var globalSessions *session.Manager
 
-func SetStaticPath(k, v string) {
-    beego.SetStaticPath(k,v)
-}
-
-func Router(rootpath string, c beego.ControllerInterface, mappingMethods ...string) *beego.App {
-    fmt.Println("controler::Router")
-    return beego.Router(rootpath, c, mappingMethods...)
-}
-
-func Run(ini *simini.SimIni, params ...string) {
-    fmt.Println("controler::Run")
-    sess := ini.GetSession("session")
-    for k,v := range sess {
-        fmt.Println("sess|k="+k+"|v="+v)
-        s,e := session.NewManager(k, v)
-        if e != nil {
-            beego.Error(e.Error())
-        }
-	globalSessions = s
+func InitSession(ini *simini.SimIni) error {
+        storeType := ini.GetStringVal("session", "type")
+        storeConf := ini.GetStringVal("session", "conf")
+        s,e := session.NewManager(storeType, storeConf)
+        globalSessions = s
 	go globalSessions.GC()
-    }
-    beego.Run(params...)
+        return e
 }
 
 func GlobalSession() *session.Manager {
     return globalSessions
 }
+
+func SetStaticPath(k, v string) {
+    beego.SetStaticPath(k,v)
+}
+
+func Router(rootpath string, c beego.ControllerInterface, mappingMethods ...string) *beego.App {
+    return beego.Router(rootpath, c, mappingMethods...)
+}
+
+func Run(params ...string) {
+    beego.Run(params...)
+}
+
 
 //func AddCtrHandler(s string, h CtrHandler) {
 //	globalClientMap[s] = h
