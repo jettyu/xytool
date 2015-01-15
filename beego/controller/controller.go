@@ -31,9 +31,12 @@ func InitSession(ini *simini.SimIni) error {
         storeType := ini.GetStringVal("session", "type")
         storeConf := ini.GetStringVal("session", "conf")
         s,e := session.NewManager(storeType, storeConf)
+        if e != nil {
+            beego.Error(e.Error())
+        }
         globalSessions = s
 	go globalSessions.GC()
-        return e
+        return nil
 }
 
 func GlobalSession() *session.Manager {
